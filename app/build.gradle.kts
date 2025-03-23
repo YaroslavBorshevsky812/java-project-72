@@ -14,6 +14,10 @@ repositories {
     mavenCentral()
 }
 
+application {
+    mainClass.set("hexlet.code.App")
+}
+
 dependencies {
     implementation("io.javalin:javalin:6.1.3")
     implementation("gg.jte:jte:3.1.9")
