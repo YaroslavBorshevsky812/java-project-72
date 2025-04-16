@@ -6,6 +6,7 @@ import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 import org.flywaydb.core.Flyway;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,8 +15,6 @@ import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 public class App {
-    private static final String DEFAULT_JDBC_URL = "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;";
-    private static final String DEFAULT_PORT = "7070";
 
     public static Javalin getApp() throws IOException, SQLException {
         // Получаем URL БД из переменной окружения или используем H2 по умолчанию
@@ -23,13 +22,13 @@ public class App {
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(jdbcUrl);
 
-        // Настройка для PostgreSQL
-        if (isPostgres(jdbcUrl)) {
-            hikariConfig.setMaximumPoolSize(10);
-        }
+        var sql = readResourceFile("schema.sql");
 
         var dataSource = new HikariDataSource(hikariConfig);
-        initializeDatabase(dataSource, jdbcUrl);
+        try (var connection = dataSource.getConnection();
+             var statement = connection.createStatement()) {
+            statement.execute(sql);
+        }
         BaseRepository.dataSource = dataSource;
 
         var app = Javalin.create(config -> {
@@ -43,28 +42,11 @@ public class App {
     }
 
     private static int getPort() {
-        return Integer.parseInt(System.getenv().getOrDefault("PORT", DEFAULT_PORT));
+        return Integer.parseInt(System.getenv().getOrDefault("PORT", "7070"));
     }
 
     private static String getJdbcUrl() {
-        return System.getenv().getOrDefault("JDBC_DATABASE_URL", DEFAULT_JDBC_URL);
-    }
-
-    private static void initializeDatabase(HikariDataSource dataSource, String jdbcUrl) throws SQLException, IOException {
-        if (isPostgres(jdbcUrl)) {
-            // Для PostgreSQL используем Flyway для миграций
-            Flyway flyway = Flyway.configure()
-                                  .dataSource(dataSource)
-                                  .load();
-            flyway.migrate();
-        } else {
-            // Для H2 выполняем SQL из файла
-            var sql = readResourceFile("schema.sql");
-            try (var connection = dataSource.getConnection();
-                 var statement = connection.createStatement()) {
-                statement.execute(sql);
-            }
-        }
+        return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
     }
 
     private static boolean isPostgres(String jdbcUrl) {
