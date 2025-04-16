@@ -2,10 +2,12 @@ package hexlet.code;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
+import gg.jte.resolve.ResourceCodeResolver;
 import hexlet.code.repository.BaseRepository;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
-import org.flywaydb.core.Flyway;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,7 +19,6 @@ import java.util.stream.Collectors;
 public class App {
 
     public static Javalin getApp() throws IOException, SQLException {
-        // Получаем URL БД из переменной окружения или используем H2 по умолчанию
         String jdbcUrl = getJdbcUrl();
         var hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(jdbcUrl);
@@ -33,12 +34,19 @@ public class App {
 
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
-            config.fileRenderer(new JavalinJte());
+            config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
 
         app.get("/", ctx -> ctx.result("Hello World"));
 
         return app;
+    }
+
+    private static TemplateEngine createTemplateEngine() {
+        ClassLoader classLoader = App.class.getClassLoader();
+        ResourceCodeResolver codeResolver = new ResourceCodeResolver("templates", classLoader);
+        TemplateEngine templateEngine = TemplateEngine.create(codeResolver, ContentType.Html);
+        return templateEngine;
     }
 
     private static int getPort() {
