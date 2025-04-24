@@ -5,7 +5,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
+import hexlet.code.controllers.RootController;
 import hexlet.code.repository.BaseRepository;
+import hexlet.code.utils.NamedRoutes;
 import io.javalin.Javalin;
 import io.javalin.rendering.template.JavalinJte;
 
@@ -19,27 +21,32 @@ import java.util.stream.Collectors;
 public class App {
 
     public static Javalin getApp() throws IOException, SQLException {
-        String jdbcUrl = getJdbcUrl();
-        var hikariConfig = new HikariConfig();
-        hikariConfig.setJdbcUrl(jdbcUrl);
-
-        var sql = readResourceFile("schema.sql");
-
-        var dataSource = new HikariDataSource(hikariConfig);
-        try (var connection = dataSource.getConnection();
-             var statement = connection.createStatement()) {
-            statement.execute(sql);
-        }
-        BaseRepository.dataSource = dataSource;
+        getDbConnection();
 
         var app = Javalin.create(config -> {
             config.bundledPlugins.enableDevLogging();
             config.fileRenderer(new JavalinJte(createTemplateEngine()));
         });
 
-        app.get("/", ctx -> ctx.result("Hello World"));
+        app.get(NamedRoutes.rootPath(), RootController::index);
 
         return app;
+    }
+
+    private static void getDbConnection() throws IOException, SQLException {
+        String jdbcUrl = getJdbcUrl();
+        var hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl(jdbcUrl);
+
+        var sql = readResourceFile("schema.sql");
+
+        System.out.println("SQL to execute:\n" + sql);
+
+        var dataSource = new HikariDataSource(hikariConfig);
+        try (var connection = dataSource.getConnection(); var statement = connection.createStatement()) {
+            statement.execute(sql);
+        }
+        BaseRepository.dataSource = dataSource;
     }
 
     private static TemplateEngine createTemplateEngine() {
@@ -55,10 +62,6 @@ public class App {
 
     private static String getJdbcUrl() {
         return System.getenv().getOrDefault("JDBC_DATABASE_URL", "jdbc:h2:mem:project;DB_CLOSE_DELAY=-1;");
-    }
-
-    private static boolean isPostgres(String jdbcUrl) {
-        return jdbcUrl.startsWith("jdbc:postgresql:");
     }
 
     private static String readResourceFile(String fileName) throws IOException {

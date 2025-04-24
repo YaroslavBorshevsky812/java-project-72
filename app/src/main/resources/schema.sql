@@ -1,9 +1,8 @@
-DROP TABLE IF EXISTS urls;
-
 CREATE TABLE IF NOT EXISTS urls
 (
     id
-    BIGSERIAL
+    BIGINT
+    AUTO_INCREMENT
     PRIMARY
     KEY,
     name
