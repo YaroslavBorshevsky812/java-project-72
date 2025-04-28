@@ -6,6 +6,7 @@ import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
 import hexlet.code.controllers.RootController;
+import hexlet.code.controllers.UrlController;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.utils.NamedRoutes;
 import io.javalin.Javalin;
@@ -29,6 +30,10 @@ public class App {
         });
 
         app.get(NamedRoutes.rootPath(), RootController::index);
+        app.get(NamedRoutes.urlsPath(), UrlController::showUrlListPage);
+        app.get(NamedRoutes.urlPath("{id}"), UrlController::showUrlItemPage);
+
+        app.post(NamedRoutes.urlsPath(), UrlController::create);
 
         return app;
     }
