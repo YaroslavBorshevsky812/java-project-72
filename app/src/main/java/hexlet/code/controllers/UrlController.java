@@ -1,6 +1,6 @@
 package hexlet.code.controllers;
 
-import hexlet.code.dto.UrlPage;
+
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.utils.NamedRoutes;
@@ -17,8 +17,8 @@ public class UrlController {
     public static void showUrlListPage(Context ctx) throws SQLException  {
         var urlList = UrlRepository.findAll();
         var page = new UrlsPage(urlList);
-        ctx.render("urls/index.jte", model("page", page));
 
+        ctx.render("urls/index.jte", model("page", page));
     }
 
     public static void create(Context ctx) throws SQLException {
@@ -36,9 +36,11 @@ public class UrlController {
 
     public static void showUrlItemPage(Context ctx) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
-        var url = UrlRepository.find(id)
+        // Тут запрашиваем через join, но вопрос можно ли из репа сразу в dto собирать.
+        // Возможно реп должен всё таки модель возвращать.
+        var page = UrlRepository.findWithChecks(id)
                                  .orElseThrow(() -> new NotFoundResponse("Url not found"));
-        var page = new UrlPage(url);
+
         ctx.render("urls/url/index.jte", model("page", page));
     }
 

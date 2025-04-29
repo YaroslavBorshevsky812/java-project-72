@@ -3,7 +3,7 @@ import hexlet.code.utils.NamedRoutes;
 import hexlet.code.dto.UrlPage;
 public final class JteindexGenerated {
 	public static final String JTE_NAME = "urls/url/index.jte";
-	public static final int[] JTE_LINE_INFO = {0,0,1,2,2,2,4,4,6,6,17,17,17,23,23,23,27,27,27,31,31,31,79,79,79,82,82,82,2,2,2,2};
+	public static final int[] JTE_LINE_INFO = {0,0,1,2,2,2,4,4,6,6,17,17,17,23,23,23,27,27,27,31,31,31,37,37,37,37,51,51,53,53,56,56,56,59,59,59,62,62,62,65,65,65,68,68,68,71,71,71,74,74,76,76,83,83,83,86,86,86,2,2,2,2};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, UrlPage page) {
 		jteOutput.writeContent("\n");
 		gg.jte.generated.ondemand.layout.JtepageGenerated.render(jteOutput, jteHtmlInterceptor, new gg.jte.html.HtmlContent() {
@@ -20,7 +20,37 @@ public final class JteindexGenerated {
 				jteOutput.writeContent("</td>\n                        </tr>\n                        <tr>\n                            <td>Дата создания</td>\n                            <td>");
 				jteOutput.setContext("td", null);
 				jteOutput.writeUserContent(page.getUrl().getFormattedCreatedAt());
-				jteOutput.writeContent("</td>\n                        </tr>\n                        </tbody>\n                    </table>\n\n                    <h2 class=\"mt-5\">Проверки</h2>\n                    <form method=\"post\" action=\"/urls/1/checks\">\n                        <button type=\"submit\" class=\"btn btn-primary\">Запустить проверку</button>\n                    </form>\n\n                    <table class=\"table table-bordered table-hover mt-3\">\n                        <thead>\n                            <th class=\"col-1\">ID</th>\n                            <th class=\"col-1\">Код ответа</th>\n                            <th>title</th>\n                            <th>h1</th>\n                            <th>description</th>\n                            <th class=\"col-2\">Дата проверки</th>\n                        </thead>\n                        <tbody>\n\n                                <tr>\n                                    <td>\n                                        1\n                                    </td>\n                                    <td>\n                                        200\n                                    </td>\n                                    <td>\n                                        Example Domain\n                                    </td>\n                                    <td>\n                                        Example Domain\n                                    </td>\n                                    <td>\n\n                                    </td>\n                                    <td>\n                                        24/04/2025 16:58\n                                    </td>\n                                </tr>\n\n                        </tbody>\n                    </table>\n                </div>\n\n                    </section>\n                </main>\n    ");
+				jteOutput.writeContent("</td>\n                        </tr>\n                        </tbody>\n                    </table>\n\n                    <h2 class=\"mt-5\">Проверки</h2>\n                    <form method=\"post\" action=\"/urls/");
+				jteOutput.setContext("form", "action");
+				jteOutput.writeUserContent(page.getUrl().getId());
+				jteOutput.setContext("form", null);
+				jteOutput.writeContent("/checks\">\n                        <button type=\"submit\" class=\"btn btn-primary\">Запустить проверку</button>\n                    </form>\n\n                    <table class=\"table table-bordered table-hover mt-3\">\n                        <thead>\n                            <th class=\"col-1\">ID</th>\n                            <th class=\"col-1\">Код ответа</th>\n                            <th>title</th>\n                            <th>h1</th>\n                            <th>description</th>\n                            <th class=\"col-2\">Дата проверки</th>\n                        </thead>\n\n                        ");
+				if (page.getUrlChecks() != null && !page.getUrlChecks().isEmpty()) {
+					jteOutput.writeContent("\n                            <tbody>\n                                ");
+					for (var item : page.getUrlChecks()) {
+						jteOutput.writeContent("\n                                <tr>\n                                    <td>\n                                        ");
+						jteOutput.setContext("td", null);
+						jteOutput.writeUserContent(item.getId());
+						jteOutput.writeContent("\n                                    </td>\n                                    <td>\n                                        ");
+						jteOutput.setContext("td", null);
+						jteOutput.writeUserContent(item.getStatusCode());
+						jteOutput.writeContent("\n                                    </td>\n                                    <td>\n                                        ");
+						jteOutput.setContext("td", null);
+						jteOutput.writeUserContent(item.getTitle());
+						jteOutput.writeContent("\n                                    </td>\n                                    <td>\n                                        ");
+						jteOutput.setContext("td", null);
+						jteOutput.writeUserContent(item.getH1());
+						jteOutput.writeContent("\n                                    </td>\n                                    <td>\n                                        ");
+						jteOutput.setContext("td", null);
+						jteOutput.writeUserContent(item.getDescription());
+						jteOutput.writeContent("\n                                    </td>\n                                    <td>\n                                        ");
+						jteOutput.setContext("td", null);
+						jteOutput.writeUserContent(item.getFormattedCreatedAt());
+						jteOutput.writeContent("\n                                    </td>\n                                </tr>\n                                ");
+					}
+					jteOutput.writeContent("\n                            </tbody>\n                        ");
+				}
+				jteOutput.writeContent("\n\n                    </table>\n                </div>\n\n                    </section>\n                </main>\n    ");
 			}
 		});
 		jteOutput.writeContent("\n\n\n");

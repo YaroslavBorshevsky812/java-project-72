@@ -28,9 +28,11 @@ dependencies {
     implementation("gg.jte:jte:3.1.9")
     implementation("io.javalin:javalin-rendering:6.1.3")
     implementation("io.javalin:javalin-bundle:6.1.3")
-//    implementation("org.slf4j:slf4j-simple:2.0.7")
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+
+    implementation("com.konghq:unirest-java:3.14.5")
+    implementation("org.jsoup:jsoup:1.16.1")
 }
 
 tasks.test {

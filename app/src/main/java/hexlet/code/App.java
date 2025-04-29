@@ -6,6 +6,7 @@ import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
 import gg.jte.resolve.ResourceCodeResolver;
 import hexlet.code.controllers.RootController;
+import hexlet.code.controllers.UrlCheckController;
 import hexlet.code.controllers.UrlController;
 import hexlet.code.repository.BaseRepository;
 import hexlet.code.utils.NamedRoutes;
@@ -34,6 +35,7 @@ public class App {
         app.get(NamedRoutes.urlPath("{id}"), UrlController::showUrlItemPage);
 
         app.post(NamedRoutes.urlsPath(), UrlController::create);
+        app.post(NamedRoutes.createCheck("{id}"), UrlCheckController::create);
 
         return app;
     }
@@ -44,8 +46,6 @@ public class App {
         hikariConfig.setJdbcUrl(jdbcUrl);
 
         var sql = readResourceFile("schema.sql");
-
-        System.out.println("SQL to execute:\n" + sql);
 
         var dataSource = new HikariDataSource(hikariConfig);
         try (var connection = dataSource.getConnection(); var statement = connection.createStatement()) {

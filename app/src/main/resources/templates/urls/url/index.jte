@@ -34,7 +34,7 @@
                     </table>
 
                     <h2 class="mt-5">Проверки</h2>
-                    <form method="post" action="/urls/1/checks">
+                    <form method="post" action="/urls/${page.getUrl().getId()}/checks">
                         <button type="submit" class="btn btn-primary">Запустить проверку</button>
                     </form>
 
@@ -47,30 +47,34 @@
                             <th>description</th>
                             <th class="col-2">Дата проверки</th>
                         </thead>
-                        <tbody>
 
+                        @if (page.getUrlChecks() != null && !page.getUrlChecks().isEmpty())
+                            <tbody>
+                                @for (var item : page.getUrlChecks())
                                 <tr>
                                     <td>
-                                        1
+                                        ${item.getId()}
                                     </td>
                                     <td>
-                                        200
+                                        ${item.getStatusCode()}
                                     </td>
                                     <td>
-                                        Example Domain
+                                        ${item.getTitle()}
                                     </td>
                                     <td>
-                                        Example Domain
+                                        ${item.getH1()}
                                     </td>
                                     <td>
-
+                                        ${item.getDescription()}
                                     </td>
                                     <td>
-                                        24/04/2025 16:58
+                                        ${item.getFormattedCreatedAt()}
                                     </td>
                                 </tr>
+                                @endfor
+                            </tbody>
+                        @endif
 
-                        </tbody>
                     </table>
                 </div>
 

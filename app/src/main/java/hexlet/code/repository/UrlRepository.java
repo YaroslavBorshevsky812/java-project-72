@@ -1,6 +1,8 @@
 package hexlet.code.repository;
 
+import hexlet.code.dto.UrlPage;
 import hexlet.code.model.Url;
+import hexlet.code.model.UrlCheck;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,7 +15,6 @@ public class UrlRepository extends BaseRepository {
     public static List<Url> findAll() throws SQLException {
         var sql = "SELECT * FROM urls";
         var urls = new ArrayList<Url>();
-
 
         try (var conn = dataSource.getConnection(); var stmt = conn.prepareStatement(sql);
              var resultSet = stmt.executeQuery()) {
@@ -53,7 +54,8 @@ public class UrlRepository extends BaseRepository {
             throw new IllegalArgumentException("Сайт с таким именем уже существует");
         }
 
-        try (var conn = dataSource.getConnection(); var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, name);
             stmt.executeUpdate();
 
@@ -73,6 +75,54 @@ public class UrlRepository extends BaseRepository {
             stmt.setString(1, name);
             var rs = stmt.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
+        }
+    }
+
+    public static Optional<UrlPage> findWithChecks(Long id) throws SQLException {
+        var sql = """
+            SELECT u.*, uc.id as check_id, uc.status_code, uc.title, 
+                   uc.h1, uc.description, uc.created_at as check_created_at
+            FROM urls u
+            LEFT JOIN url_checks uc ON u.id = uc.url_id
+            WHERE u.id = ?
+            ORDER BY uc.created_at DESC
+            """;
+
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            var rs = stmt.executeQuery();
+
+            if (!rs.next()) {
+                return Optional.empty();
+            }
+
+            // Создаем URL
+            var url = new Url(
+                rs.getLong("id"),
+                rs.getString("name"),
+                rs.getTimestamp("created_at").toLocalDateTime()
+            );
+
+            // Собираем все проверки
+            var checks = new ArrayList<UrlCheck>();
+            do {
+                if (rs.getObject("check_id") != null) {
+                    checks.add(new UrlCheck(
+                        rs.getLong("check_id"),
+                        rs.getInt("status_code"),
+                        rs.getString("title"),
+                        rs.getString("h1"),
+                        rs.getString("description"),
+                        rs.getLong("id"), // url_id
+                        rs.getTimestamp("check_created_at").toLocalDateTime()
+                    ));
+                }
+            }
+            while (rs.next());
+
+            return Optional.of(new UrlPage(url, checks));
         }
     }
 }
