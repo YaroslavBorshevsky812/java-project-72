@@ -6,6 +6,7 @@ plugins {
     jacoco
     id("checkstyle")
     id("io.freefair.lombok") version "8.13.1"
+    id("org.sonarqube") version "4.4.1.3373"
 }
 
 group = "hexlet.code"
@@ -17,6 +18,14 @@ repositories {
 
 application {
     mainClass.set("hexlet.code.App")
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "YaroslavBorshevsky812_java-project-72")
+        property("sonar.organization", "yaroslavborshevsky812")
+        property("sonar.host.url", "https://sonarcloud.io")
+    }
 }
 
 dependencies {
@@ -43,5 +52,12 @@ tasks.test {
         showStackTraces = true
         showCauses = true
         showStandardStreams = true
+    }
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
     }
 }
