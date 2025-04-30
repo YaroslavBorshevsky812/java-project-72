@@ -3,7 +3,6 @@ package hexlet.code.repository;
 import hexlet.code.model.UrlCheck;
 import hexlet.code.utils.SiteChecker;
 import io.javalin.http.NotFoundResponse;
-
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
@@ -11,8 +10,8 @@ import java.util.Optional;
 public class UrlCheckRepository extends BaseRepository {
 
     public static UrlCheck create(Long urlId) throws SQLException {
-        var sql = "INSERT INTO url_checks (status_code, title, h1, description, url_id)\n" +
-            "VALUES (?, ?, ?, ?, ?);";
+        var sql = "INSERT INTO url_checks (status_code, title, h1, description, url_id)\n"
+            + "VALUES (?, ?, ?, ?, ?);";
 
         var url = UrlRepository.find(urlId)
                                .orElseThrow(() -> new NotFoundResponse("Url not found"));

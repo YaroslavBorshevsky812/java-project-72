@@ -1,7 +1,6 @@
 package hexlet.code.controllers;
 
 import hexlet.code.repository.UrlCheckRepository;
-import hexlet.code.repository.UrlRepository;
 import hexlet.code.utils.NamedRoutes;
 import io.javalin.http.Context;
 import io.javalin.validation.ValidationException;

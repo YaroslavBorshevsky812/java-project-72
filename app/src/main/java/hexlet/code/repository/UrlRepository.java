@@ -79,14 +79,12 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static Optional<UrlPage> findWithChecks(Long id) throws SQLException {
-        var sql = """
-            SELECT u.*, uc.id as check_id, uc.status_code, uc.title, 
-                   uc.h1, uc.description, uc.created_at as check_created_at
-            FROM urls u
-            LEFT JOIN url_checks uc ON u.id = uc.url_id
-            WHERE u.id = ?
-            ORDER BY uc.created_at DESC
-            """;
+        var sql = "SELECT u.*, uc.id as check_id, uc.status_code, uc.title, "
+            + "uc.h1, uc.description, uc.created_at as check_created_at "
+            + "FROM urls u "
+            + "LEFT JOIN url_checks uc ON u.id = uc.url_id "
+            + "WHERE u.id = ? "
+            + "ORDER BY uc.created_at DESC";
 
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql)) {
@@ -119,8 +117,7 @@ public class UrlRepository extends BaseRepository {
                         rs.getTimestamp("check_created_at").toLocalDateTime()
                     ));
                 }
-            }
-            while (rs.next());
+            } while (rs.next());
 
             return Optional.of(new UrlPage(url, checks));
         }
