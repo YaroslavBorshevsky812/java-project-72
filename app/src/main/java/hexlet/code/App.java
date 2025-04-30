@@ -22,6 +22,10 @@ import java.util.stream.Collectors;
 
 public class App {
 
+    public static String stringTest(String s) {
+        return s;
+    }
+
     public static Javalin getApp() throws IOException, SQLException {
         getDbConnection();
 
