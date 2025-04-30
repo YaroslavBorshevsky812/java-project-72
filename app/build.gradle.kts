@@ -53,6 +53,7 @@ tasks.test {
         showCauses = true
         showStandardStreams = true
     }
+    finalizedBy(tasks.jacocoTestReport)
 }
 
 tasks.jacocoTestReport {
