@@ -1,8 +1,7 @@
 CREATE TABLE IF NOT EXISTS urls
 (
     id
-    BIGINT
-    AUTO_INCREMENT
+    BIGSERIAL
     PRIMARY
     KEY,
     name
@@ -18,8 +17,7 @@ CREATE TABLE IF NOT EXISTS urls
 CREATE TABLE IF NOT EXISTS url_checks
 (
     id
-    BIGINT
-    AUTO_INCREMENT
+    BIGSERIAL
     PRIMARY
     KEY,
     status_code

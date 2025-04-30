@@ -1,6 +1,5 @@
 package hexlet.code.controllers;
 
-
 import hexlet.code.dto.UrlsPage;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.utils.NamedRoutes;
