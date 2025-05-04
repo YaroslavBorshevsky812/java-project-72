@@ -27,6 +27,7 @@ public class UrlCheckRepository extends BaseRepository {
             stmt.setLong(5, url.getId());
             stmt.executeUpdate();
 
+
             try (var generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     long id = generatedKeys.getLong(1);
@@ -58,6 +59,14 @@ public class UrlCheckRepository extends BaseRepository {
                 }
                 return Optional.empty();
             }
+        }
+    }
+
+    public static void removeAll() throws SQLException {
+        var sql = "DELETE FROM url_checks";
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
         }
     }
 }

@@ -25,37 +25,41 @@ public class UrlController {
 
     public static void create(Context ctx) throws SQLException {
         try {
-            var inputUrl = ctx.formParamAsClass("url", String.class).get();
+            var inputUrl = ctx.formParamAsClass("url", String.class).get().trim();
             String normalizedUrl;
 
             try {
                 URI uri = new URI(inputUrl);
                 URL url = uri.toURL();
                 int port = url.getPort();
-                normalizedUrl = url.getProtocol() + "://" + url.getHost() +
-                    (port != -1 ? ":" + port : "");
+                normalizedUrl = url.getProtocol()
+                    + "://"
+                    + url.getHost()
+                    + (port != -1 ? ":" + port : "");
 
                 if (url.getHost() == null || url.getHost().isEmpty()) {
                     ctx.sessionAttribute("flash", "Некорректный URL");
-                    ctx.sessionAttribute("flash-type", "success");
+                    ctx.sessionAttribute("flash-type", "danger");
                     ctx.redirect(NamedRoutes.rootPath());
                     return;
                 }
             } catch (Exception e) {
                 ctx.sessionAttribute("flash", "Некорректный URL");
+                ctx.sessionAttribute("flash-type", "danger");
                 ctx.redirect(NamedRoutes.rootPath());
                 return;
             }
 
-            try {
-                UrlRepository.create(normalizedUrl);
-                ctx.sessionAttribute("flash", "Страница успешно добавлена");
-                ctx.sessionAttribute("flash-type", "success");
-            } catch (IllegalArgumentException e) {
-                ctx.sessionAttribute("flash", "Страница уже существует");
-                ctx.sessionAttribute("flash-type", "danger");
+            if (UrlRepository.existsByName(normalizedUrl)) {
+                ctx.sessionAttribute("flash", "page already exist");
+                ctx.sessionAttribute("flash-type", "info");
+                ctx.redirect(NamedRoutes.urlsPath());
+                return;
             }
 
+            UrlRepository.create(normalizedUrl);
+            ctx.sessionAttribute("flash", "page has been created");
+            ctx.sessionAttribute("flash-type", "success");
             ctx.redirect(NamedRoutes.urlsPath());
 
         } catch (ValidationException e) {
@@ -67,10 +71,15 @@ public class UrlController {
 
     public static void showUrlItemPage(Context ctx) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
+
         // Тут запрашиваем через join, но вопрос можно ли из репа сразу в dto собирать.
         // Возможно реп должен всё таки модель возвращать.
         var page = UrlRepository.findWithChecks(id)
                                  .orElseThrow(() -> new NotFoundResponse("Url not found"));
+
+        page.setFlash(ctx.consumeSessionAttribute("flash"));
+        page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
+
 
         ctx.render("urls/url/index.jte", model("page", page));
     }

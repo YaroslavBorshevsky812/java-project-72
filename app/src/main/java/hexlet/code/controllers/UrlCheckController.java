@@ -15,6 +15,8 @@ public class UrlCheckController {
             var id = ctx.pathParamAsClass("id", Long.class).get();
 
             UrlCheckRepository.create(id);
+            ctx.sessionAttribute("flash", "Страница успешно проверена");
+            ctx.sessionAttribute("flash-type", "success");
             ctx.redirect(NamedRoutes.urlPath(id));
 
         } catch (ValidationException e) {

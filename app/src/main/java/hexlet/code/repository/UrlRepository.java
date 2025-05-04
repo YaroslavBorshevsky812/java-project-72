@@ -50,10 +50,6 @@ public class UrlRepository extends BaseRepository {
     public static Url create(String name) throws SQLException {
         var sql = "INSERT INTO urls (name) VALUES (?)";
 
-        if (existsByName(name)) {
-            throw new IllegalArgumentException("Сайт с таким именем уже существует");
-        }
-
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, name);
@@ -118,6 +114,14 @@ public class UrlRepository extends BaseRepository {
             } while (rs.next());
 
             return Optional.of(new UrlPage(url, checks));
+        }
+    }
+
+    public static void removeAll() throws SQLException {
+        var sql = "DELETE FROM urls";
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            stmt.executeUpdate();
         }
     }
 }
