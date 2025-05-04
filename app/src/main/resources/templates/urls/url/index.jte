@@ -1,15 +1,17 @@
 @import hexlet.code.utils.NamedRoutes
-@import hexlet.code.dto.UrlPage
+@import hexlet.code.dto.urls.UrlPage
 @param UrlPage page
 
 @template.layout.page(
     content = @`
                 <main class="flex-grow-1">
 
-                        <div class="rounded-0 m-0 alert alert-dismissible fade show alert-success" role="alert">
-                            <p class="m-0">Страница успешно проверена</p>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
+        @if(page != null && page.getFlash() != null)
+            <div class="rounded-0 m-0 alert alert-dismissible fade show alert-success" role="alert">
+                <p class="m-0">${page.getFlash()}</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
                     <section>
 

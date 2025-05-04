@@ -1,14 +1,21 @@
 package gg.jte.generated.ondemand.urls;
 import hexlet.code.utils.NamedRoutes;
-import hexlet.code.dto.UrlsPage;
+import hexlet.code.dto.urls.UrlsPage;
 public final class JteindexGenerated {
 	public static final String JTE_NAME = "urls/index.jte";
-	public static final int[] JTE_LINE_INFO = {0,0,1,2,2,2,4,4,6,6,22,22,24,24,26,26,26,28,28,28,28,28,28,28,28,28,28,28,28,31,34,37,37,39,39,44,44,44,44,44,2,2,2,2};
+	public static final int[] JTE_LINE_INFO = {0,0,1,2,2,2,4,4,6,6,9,9,11,11,11,14,14,30,30,32,32,34,34,34,36,36,36,36,36,36,36,36,36,36,36,36,39,42,45,45,47,47,52,52,52,52,52,2,2,2,2};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, UrlsPage page) {
 		jteOutput.writeContent("\n");
 		gg.jte.generated.ondemand.layout.JtepageGenerated.render(jteOutput, jteHtmlInterceptor, new gg.jte.html.HtmlContent() {
 			public void writeTo(gg.jte.html.HtmlTemplateOutput jteOutput) {
-				jteOutput.writeContent("\n        <main class=\"flex-grow-1\">\n            <section>\n                <div class=\"container-lg mt-5\">\n                    <h1>Сайты</h1>\n\n                    <table class=\"table table-bordered table-hover mt-3\">\n                        <thead>\n                            <tr>\n                                <th class=\"col-1\">ID</th>\n                                <th>Имя</th>\n                                <th class=\"col-2\">Последняя проверка</th>\n                                <th class=\"col-1\">Код ответа</th>\n                            </tr>\n                        </thead>\n                        \n                        ");
+				jteOutput.writeContent("\n        <main class=\"flex-grow-1\">\n\n            ");
+				if (page != null && page.getFlash() != null) {
+					jteOutput.writeContent("\n                        <div class=\"rounded-0 m-0 alert alert-dismissible fade show alert-success\" role=\"alert\">\n                            <p class=\"m-0\">");
+					jteOutput.setContext("p", null);
+					jteOutput.writeUserContent(page.getFlash());
+					jteOutput.writeContent("</p>\n                            <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n                        </div>\n            ");
+				}
+				jteOutput.writeContent("\n\n            <section>\n                <div class=\"container-lg mt-5\">\n                    <h1>Сайты</h1>\n\n                    <table class=\"table table-bordered table-hover mt-3\">\n                        <thead>\n                            <tr>\n                                <th class=\"col-1\">ID</th>\n                                <th>Имя</th>\n                                <th class=\"col-2\">Последняя проверка</th>\n                                <th class=\"col-1\">Код ответа</th>\n                            </tr>\n                        </thead>\n                        \n                        ");
 				if (page.getUrls() != null && !page.getUrls().isEmpty()) {
 					jteOutput.writeContent("\n                            <tbody>\n                                ");
 					for (var item : page.getUrls()) {

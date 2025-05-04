@@ -1,6 +1,6 @@
 package hexlet.code.repository;
 
-import hexlet.code.dto.UrlPage;
+import hexlet.code.dto.urls.UrlPage;
 import hexlet.code.model.Url;
 import hexlet.code.model.UrlCheck;
 
@@ -96,14 +96,12 @@ public class UrlRepository extends BaseRepository {
                 return Optional.empty();
             }
 
-            // Создаем URL
             var url = new Url(
                 rs.getLong("id"),
                 rs.getString("name"),
                 rs.getTimestamp("created_at").toLocalDateTime()
             );
 
-            // Собираем все проверки
             var checks = new ArrayList<UrlCheck>();
             do {
                 if (rs.getObject("check_id") != null) {
@@ -113,7 +111,7 @@ public class UrlRepository extends BaseRepository {
                         rs.getString("title"),
                         rs.getString("h1"),
                         rs.getString("description"),
-                        rs.getLong("id"), // url_id
+                        rs.getLong("id"),
                         rs.getTimestamp("check_created_at").toLocalDateTime()
                     ));
                 }
