@@ -36,10 +36,14 @@
                                             <a href="${NamedRoutes.urlPath(item.getId())}">${item.getName()}</a>
                                         </td>
                                         <td>
-                                            <%-- ${item.getCreatedAt() != null ? item.getCreatedAt() : ""} --%>
+                                            @if (item.getLastCheck() != null && item.getLastCheck().getCreatedAt() != null)
+                                                ${item.getLastCheck().getFormattedCreatedAt()}
+                                            @endif
                                         </td>
                                         <td>
-                                            <%-- ${item.getStatusCode() != null ? item.getStatusCode() : ""} --%>
+                                            @if (item.getLastCheck() != null)
+                                                ${item.getLastCheck().getStatusCode()}
+                                            @endif
                                         </td>
                                     </tr>
                                 @endfor

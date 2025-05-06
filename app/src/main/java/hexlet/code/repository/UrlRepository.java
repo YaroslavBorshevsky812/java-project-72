@@ -7,7 +7,9 @@ import hexlet.code.model.UrlCheck;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class UrlRepository extends BaseRepository {
@@ -73,6 +75,50 @@ public class UrlRepository extends BaseRepository {
             return rs.next() && rs.getInt(1) > 0;
         }
     }
+
+    public static List<Map<Url, UrlCheck>> findAllWithLastCheck() throws SQLException {
+        var sql = "SELECT u.id, u.name, u.created_at, "
+            + "uc.id as check_id, uc.status_code, uc.title, uc.h1, uc.description, "
+            + "uc.created_at as check_created_at "
+            + "FROM urls u "
+            + "LEFT JOIN url_checks uc ON u.id = uc.url_id "
+            + "AND uc.created_at = (SELECT MAX(created_at) FROM url_checks WHERE url_id = u.id) "
+            + "ORDER BY u.id DESC";
+
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.prepareStatement(sql)) {
+            var resultSet = stmt.executeQuery();
+            var result = new ArrayList<Map<Url, UrlCheck>>();
+
+            while (resultSet.next()) {
+                var url = new Url(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getTimestamp("created_at").toLocalDateTime()
+                );
+
+                UrlCheck check = null;
+                if (resultSet.getObject("check_id") != null) {
+                    check = new UrlCheck(
+                        resultSet.getLong("check_id"),
+                        resultSet.getInt("status_code"),
+                        resultSet.getString("title"),
+                        resultSet.getString("h1"),
+                        resultSet.getString("description"),
+                        resultSet.getLong("id"),
+                        resultSet.getTimestamp("check_created_at").toLocalDateTime()
+                    );
+                }
+
+                var urlCheckMap = new HashMap<Url, UrlCheck>();
+                urlCheckMap.put(url, check);
+                result.add(urlCheckMap);
+            }
+
+            return result;
+        }
+    }
+
 
     public static Optional<UrlPage> findWithChecks(Long id) throws SQLException {
         var sql = "SELECT u.*, uc.id as check_id, uc.status_code, uc.title, "

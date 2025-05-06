@@ -1,6 +1,9 @@
 package hexlet.code.controllers;
 
+import hexlet.code.dto.urls.UrlDto;
 import hexlet.code.dto.urls.UrlsPage;
+import hexlet.code.model.Url;
+import hexlet.code.model.UrlCheck;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.utils.NamedRoutes;
 import io.javalin.http.Context;
@@ -10,14 +13,34 @@ import io.javalin.validation.ValidationException;
 import java.net.URI;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
 public class UrlController {
 
     public static void showUrlListPage(Context ctx) throws SQLException  {
-        var urlList = UrlRepository.findAll();
-        var page = new UrlsPage(urlList);
+        var urlsWithUrlChecksMap = UrlRepository.findAllWithLastCheck();
+
+
+        List<UrlDto> urlDtos = urlsWithUrlChecksMap.stream()
+                                                   .map(urlCheckMap -> {
+                                                       Map.Entry<Url, UrlCheck> entry =
+                                                           urlCheckMap.entrySet().iterator().next();
+                                                       Url url = entry.getKey();
+                                                       UrlCheck check = entry.getValue();
+
+                                                       return new UrlDto(
+                                                           url.getId(),
+                                                           url.getName(),
+                                                           url.getCreatedAt(),
+                                                           check
+                                                       );
+                                                   })
+                                                   .toList();
+
+        var page = new UrlsPage(urlDtos);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
         ctx.render("urls/index.jte", model("page", page));
