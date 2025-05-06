@@ -10,8 +10,8 @@ import java.util.Optional;
 public class UrlCheckRepository extends BaseRepository {
 
     public static UrlCheck create(Long urlId) throws SQLException {
-        var sql = "INSERT INTO url_checks (status_code, title, h1, description, url_id)\n"
-            + "VALUES (?, ?, ?, ?, ?);";
+        var sql = "INSERT INTO url_checks (status_code, title, h1, description, url_id, created_at)\n"
+            + "VALUES (?, ?, ?, ?, ?, NOW());";
 
         var url = UrlRepository.find(urlId)
                                .orElseThrow(() -> new NotFoundResponse("Url not found"));

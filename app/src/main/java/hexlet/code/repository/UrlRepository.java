@@ -48,7 +48,7 @@ public class UrlRepository extends BaseRepository {
     }
 
     public static Url create(String name) throws SQLException {
-        var sql = "INSERT INTO urls (name) VALUES (?)";
+        var sql = "INSERT INTO urls (name, created_at) VALUES (?, NOW())";
 
         try (var conn = dataSource.getConnection();
              var stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
