@@ -21,7 +21,7 @@ public class UrlCheck {
     private Long urlId;
     private LocalDateTime createdAt;
 
-    public String getFormattedCreatedAt() {
+    public final String getFormattedCreatedAt() {
         if (createdAt == null) {
             return "";
         }

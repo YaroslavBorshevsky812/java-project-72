@@ -17,7 +17,7 @@ public class Url {
     private String name;
     private LocalDateTime createdAt;
 
-    public String getFormattedCreatedAt() {
+    public final String getFormattedCreatedAt() {
         if (createdAt == null) {
             return "";
         }

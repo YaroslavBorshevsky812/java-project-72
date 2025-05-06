@@ -19,7 +19,7 @@ public class UrlDto {
     private LocalDateTime createdAt;
     private UrlCheck lastCheck;
 
-    public String getFormattedCreatedAt() {
+    public final String getFormattedCreatedAt() {
         if (createdAt == null) {
             return "";
         }
