@@ -1,9 +1,6 @@
 package hexlet.code.controllers;
 
-import hexlet.code.dto.urls.UrlDto;
 import hexlet.code.dto.urls.UrlsPage;
-import hexlet.code.model.Url;
-import hexlet.code.model.UrlCheck;
 import hexlet.code.repository.UrlRepository;
 import hexlet.code.utils.NamedRoutes;
 import io.javalin.http.Context;
@@ -13,8 +10,6 @@ import io.javalin.validation.ValidationException;
 import java.net.URI;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
 
 import static io.javalin.rendering.template.TemplateUtil.model;
 
