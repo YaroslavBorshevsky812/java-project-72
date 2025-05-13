@@ -20,9 +20,6 @@ public class UrlDto {
     private UrlCheck lastCheck;
 
     public final String getFormattedCreatedAt() {
-        if (createdAt == null) {
-            return "";
-        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return createdAt.format(formatter);
     }

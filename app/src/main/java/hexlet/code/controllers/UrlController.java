@@ -21,26 +21,9 @@ import static io.javalin.rendering.template.TemplateUtil.model;
 public class UrlController {
 
     public static void showUrlListPage(Context ctx) throws SQLException  {
-        var urlsWithUrlChecksMap = UrlRepository.findAllWithLastCheck();
+        var urlDtoList = UrlRepository.findAllWithLastCheck();
 
-
-        List<UrlDto> urlDtos = urlsWithUrlChecksMap.stream()
-                                                   .map(urlCheckMap -> {
-                                                       Map.Entry<Url, UrlCheck> entry =
-                                                           urlCheckMap.entrySet().iterator().next();
-                                                       Url url = entry.getKey();
-                                                       UrlCheck check = entry.getValue();
-
-                                                       return new UrlDto(
-                                                           url.getId(),
-                                                           url.getName(),
-                                                           url.getCreatedAt(),
-                                                           check
-                                                       );
-                                                   })
-                                                   .toList();
-
-        var page = new UrlsPage(urlDtos);
+        var page = new UrlsPage(urlDtoList);
         page.setFlash(ctx.consumeSessionAttribute("flash"));
         page.setFlashType(ctx.consumeSessionAttribute("flash-type"));
         ctx.render("urls/index.jte", model("page", page));

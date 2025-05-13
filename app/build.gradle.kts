@@ -29,7 +29,6 @@ sonar {
 }
 
 dependencies {
-    implementation("org.flywaydb:flyway-core:9.22.3")
     implementation("com.h2database:h2:2.2.224")
     implementation("org.postgresql:postgresql:42.6.0")
     implementation("com.zaxxer:HikariCP:5.1.0")
